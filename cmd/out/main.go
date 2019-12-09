@@ -1,10 +1,11 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
-	"path/filepath"
 
 	"github.com/dmechas/concourse-team-resource/concourse"
 	"github.com/dmechas/concourse-team-resource/fly"
@@ -21,34 +22,41 @@ var (
 )
 
 func main() {
-	if len(os.Args) < 2 {
-		log.Fatalln(fmt.Sprintf(
-			"not enough args - usage: %s <sources directory>", os.Args[0]))
-	}
-
-	sourcesDir := os.Args[1]
-
-	outDir, err := filepath.Abs(filepath.Dir(os.Args[0]))
-	if err != nil {
-		log.Fatalln(err)
-	}
+	// outDir, err := filepath.Abs(filepath.Dir(os.Args[0]))
+	// if err != nil {
+	// log.Fatalln(err)
+	// }
+	l = logger.NewLogger()
 
 	var input concourse.OutRequest
 
-	flyBinaryPath := filepath.Join(outDir, flyBinaryName)
+	logFile, err := ioutil.TempFile("", "concourse-team-resource-out.log")
+	if err != nil {
+		log.Fatalln(err)
+	}
+	fmt.Fprintf(os.Stderr, "Logging to %s\n", logFile.Name())
 
-	l = logger.NewLogger()
+	err = json.NewDecoder(os.Stdin).Decode(&input)
+	if err != nil {
+		fmt.Fprintf(logFile, "Exiting with error: %v\n", err)
+		log.Fatalln(err)
+	}
 
-	input.Source.Target = "AHAHAH"
+	flyBinaryPath := flyBinaryName
+	// flyBinaryPath := filepath.Join(outDir, flyBinaryName)
 
 	flyCommand := fly.NewCommand(input.Source.Target, l, flyBinaryPath)
 
-	response, err := out.NewCommand(l, flyCommand, sourcesDir).Run(input)
+	response, err := out.NewCommand(l, flyCommand).Run(input)
 	if err != nil {
 		l.Debugf("Exiting with error: %v\n", err)
 		log.Fatalln(err)
 	}
 
 	l.Debugf("Returning output: %+v\n", response)
-
+	err = json.NewEncoder(os.Stdout).Encode(response)
+	if err != nil {
+		l.Debugf("Exiting with error: %v\n", err)
+		log.Fatalln(err)
+	}
 }

@@ -11,10 +11,10 @@ import (
 	"github.com/dmechas/concourse-team-resource/logger"
 )
 
-//go:generate counterfeiter . Command
-
 type Command interface {
 	Login(url string, teamName string, username string, password string, insecure bool) ([]byte, error)
+	GetTeam(teamName string) ([]byte, error)
+	SetTeam(teamName string, localUser string, githubTeam string) ([]byte, error)
 }
 
 type command struct {
@@ -29,6 +29,23 @@ func NewCommand(target string, logger logger.Logger, flyBinaryPath string) Comma
 		logger:        logger,
 		flyBinaryPath: flyBinaryPath,
 	}
+}
+
+func (f command) GetTeam(teamName string) ([]byte, error) {
+	return f.run(
+		"get-team",
+		"-n", teamName,
+	)
+}
+
+func (f command) SetTeam(teamName string, localUser string, githubTeam string) ([]byte, error) {
+	return f.run(
+		"set-team",
+		"--non-interactive",
+		"-n", teamName,
+		fmt.Sprintf("--local-user=%s", localUser),
+		fmt.Sprintf("--github-team=%s", githubTeam),
+	)
 }
 
 func (f command) Login(

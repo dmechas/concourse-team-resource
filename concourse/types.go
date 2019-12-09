@@ -2,37 +2,22 @@ package concourse
 
 type Source struct {
 	Target   string `json:"target"`
-	Teams    []Team `json:"teams"`
 	Insecure string `json:"insecure"`
-}
-
-type Team struct {
-	Name     string `json:"name"`
 	Username string `json:"username"`
 	Password string `json:"password"`
+	MainTeam string `json:"main_team"`
 }
 
 type CheckRequest struct {
-	Source  Source  `json:"source"`
-	Version Version `json:"version"`
 }
 
-type Version map[string]string
-
-type CheckResponse []Version
+type CheckResponse []string
 
 type InRequest struct {
-	Source  Source   `json:"source"`
-	Version Version  `json:"version"`
-	Params  InParams `json:"params"`
-}
-
-type InParams struct {
 }
 
 type InResponse struct {
-	Version  Version    `json:"version"`
-	Metadata []Metadata `json:"metadata"`
+	Version string `json:"version"`
 }
 
 type Metadata struct {
@@ -46,21 +31,12 @@ type OutRequest struct {
 }
 
 type OutParams struct {
-	Pipelines     []Pipeline `json:"pipelines,omitempty"`
-	PipelinesFile string     `json:"pipelines_file,omitempty"`
-}
-
-type Pipeline struct {
-	Name       string                 `json:"name" yaml:"name"`
-	ConfigFile string                 `json:"config_file" yaml:"config_file"`
-	VarsFiles  []string               `json:"vars_files" yaml:"vars_files"`
-	Vars       map[string]interface{} `json:"vars" yaml:"vars"`
-	TeamName   string                 `json:"team" yaml:"team"`
-	Unpaused   bool                   `json:"unpaused" yaml:"unpaused"`
-	Exposed    bool                   `json:"exposed" yaml:"exposed"`
+	GitHubTeam string `json:"github_team" yaml:"github_team"`
+	LocalUser  string `json:"local_user" yaml:"local_user"`
+	TeamName   string `json:"team_name" yaml:"team_name"`
 }
 
 type OutResponse struct {
-	Version  Version    `json:"version"`
+	Version  string     `json:"version"`
 	Metadata []Metadata `json:"metadata"`
 }

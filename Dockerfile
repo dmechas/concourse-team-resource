@@ -5,6 +5,8 @@ ADD fly/fly-*-linux-amd64.tgz /assets/
 COPY concourse-team-resource /go/src/github.com/dmechas/concourse-team-resource
 
 ENV CGO_ENABLED 0
+RUN go build -o /assets/in github.com/dmechas/concourse-team-resource/cmd/in
+RUN go build -o /assets/check github.com/dmechas/concourse-team-resource/cmd/check
 RUN go build -o /assets/out github.com/dmechas/concourse-team-resource/cmd/out
 
 FROM alpine:edge AS resource
