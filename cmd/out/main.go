@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"path/filepath"
 
 	"github.com/dmechas/concourse-team-resource/concourse"
 	"github.com/dmechas/concourse-team-resource/fly"
@@ -22,10 +23,10 @@ var (
 )
 
 func main() {
-	// outDir, err := filepath.Abs(filepath.Dir(os.Args[0]))
-	// if err != nil {
-	// log.Fatalln(err)
-	// }
+	outDir, err := filepath.Abs(filepath.Dir(os.Args[0]))
+	if err != nil {
+		log.Fatalln(err)
+	}
 	l = logger.NewLogger()
 
 	var input concourse.OutRequest
@@ -42,8 +43,7 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	flyBinaryPath := flyBinaryName
-	// flyBinaryPath := filepath.Join(outDir, flyBinaryName)
+	flyBinaryPath := filepath.Join(outDir, flyBinaryName)
 
 	flyCommand := fly.NewCommand(input.Source.Target, l, flyBinaryPath)
 
