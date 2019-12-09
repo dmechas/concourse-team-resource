@@ -2,7 +2,7 @@ package logger
 
 import (
 	"fmt"
-	"os"
+	"io"
 )
 
 type Logger interface {
@@ -10,12 +10,15 @@ type Logger interface {
 }
 
 type logger struct {
+	sink io.Writer
 }
 
-func NewLogger() Logger {
-	return &logger{}
+func NewLogger(sink io.Writer) Logger {
+	return &logger{
+		sink: sink,
+	}
 }
 
 func (l logger) Debugf(format string, a ...interface{}) (int, error) {
-	return fmt.Fprintf(os.Stdout, format, a...)
+	return fmt.Fprintf(l.sink, format, a...)
 }

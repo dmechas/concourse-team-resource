@@ -76,7 +76,10 @@ func (c *Command) Run(input concourse.OutRequest) (concourse.OutResponse, error)
 	)
 
 	response := concourse.OutResponse{
-		Version: version,
+		Version: concourse.Version{
+			input.Params.TeamName: version,
+		},
+		Metadata: []concourse.Metadata{},
 	}
 	return response, nil
 }

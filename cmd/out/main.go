@@ -27,7 +27,7 @@ func main() {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	l = logger.NewLogger()
+	l = logger.NewLogger(os.Stderr)
 
 	var input concourse.OutRequest
 

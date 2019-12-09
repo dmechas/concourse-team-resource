@@ -14,7 +14,7 @@ var (
 )
 
 func main() {
-	l = logger.NewLogger()
+	l = logger.NewLogger(os.Stderr)
 
 	response := concourse.InResponse{}
 	err := json.NewEncoder(os.Stdout).Encode(response)

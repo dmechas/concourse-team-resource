@@ -11,13 +11,16 @@ type Source struct {
 type CheckRequest struct {
 }
 
-type CheckResponse []string
+type Version map[string]string
+
+type CheckResponse []Version
 
 type InRequest struct {
 }
 
 type InResponse struct {
-	Version string `json:"version"`
+	Version  Version    `json:"version"`
+	Metadata []Metadata `json:"metadata"`
 }
 
 type Metadata struct {
@@ -37,6 +40,6 @@ type OutParams struct {
 }
 
 type OutResponse struct {
-	Version  string     `json:"version"`
+	Version  Version    `json:"version"`
 	Metadata []Metadata `json:"metadata"`
 }
