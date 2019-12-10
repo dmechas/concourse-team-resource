@@ -27,7 +27,6 @@ func main() {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	l = logger.NewLogger(os.Stderr)
 
 	var input concourse.OutRequest
 
@@ -42,6 +41,8 @@ func main() {
 		fmt.Fprintf(logFile, "Exiting with error: %v\n", err)
 		log.Fatalln(err)
 	}
+
+	l = logger.NewLogger(logFile)
 
 	flyBinaryPath := filepath.Join(outDir, flyBinaryName)
 
