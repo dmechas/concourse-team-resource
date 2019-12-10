@@ -1,8 +1,11 @@
 FROM golang:alpine as builder
 RUN mkdir -p /assets
-ADD fly/fly-*-linux-amd64.tgz /assets/
+ARG FLY_VERSION=5.7.2
 
-COPY concourse-team-resource /go/src/github.com/dmechas/concourse-team-resource
+ADD https://github.com/concourse/concourse/releases/download/v${FLY_VERSION}/fly-${FLY_VERSION}-linux-amd64.tgz /tmp/fly.tgz
+RUN tar zxf /tmp/fly.tgz -C /assets/
+
+COPY . /go/src/github.com/dmechas/concourse-team-resource
 
 ENV CGO_ENABLED 0
 RUN go build -o /assets/in github.com/dmechas/concourse-team-resource/cmd/in
