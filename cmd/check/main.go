@@ -2,6 +2,8 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
 
@@ -14,10 +16,16 @@ var (
 )
 
 func main() {
-	l = logger.NewLogger(os.Stderr)
+	logFile, err := ioutil.TempFile("", "concourse-team-resource-check.log")
+	if err != nil {
+		log.Fatalln(err)
+	}
+	fmt.Fprintf(os.Stderr, "Logging to %s\n", logFile.Name())
+
+	l = logger.NewLogger(logFile)
 
 	response := concourse.CheckResponse{}
-	err := json.NewEncoder(os.Stdout).Encode(response)
+	err = json.NewEncoder(os.Stdout).Encode(response)
 	if err != nil {
 		l.Debugf("Exiting with error: %v\n", err)
 		log.Fatalln(err)
