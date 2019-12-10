@@ -1,6 +1,6 @@
 # Concourse Team Resource
 
-Get and set concourse teams from concourse.
+Get and set concourse teams from concourse inpired by [concourse-pipeline-resource](https://github.com/concourse/concourse-pipeline-resource)
 
 ## Installing
 
